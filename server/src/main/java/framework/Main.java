@@ -1,5 +1,6 @@
 package framework;
 
+import framework.api.MyEnum;
 import framework.api.Path;
 import framework.api.QueryParam;
 import io.undertow.Undertow;
@@ -92,27 +93,24 @@ public class Main {
 
                             if (paramType.equals(Double.class)) {
                                 return Double.valueOf(paramValue);
-                            }
-                            else if (paramType.equals(Integer.class)) {
+                            } else if (paramType.equals(Integer.class)) {
                                 return Integer.valueOf(paramValue);
                             } else if (paramType.equals(Float.class)) {
                                 return Float.valueOf(paramValue);
                             } else if (paramType.equals(Boolean.class)) {
                                 return Boolean.valueOf(paramValue);
-                            } else if (paramType.equals(Enum.class)) {
-                                System.out.println("this is enum   "  + Enum.valueOf( (Class)paramType, paramValue ));
-                                return Enum.valueOf( (Class) paramType, paramValue );
+                            } else if (paramType.equals(MyEnum.class)) {
+                                MyEnum g = MyEnum.values()[Integer.valueOf(paramValue)];
+                                return g;
                             } else {
-
+                                System.out.println("TYPE HERE --> " + paramType);
                                 return paramValue;
                             }
 
                         }).toArray();
 
                         Object o = method.invoke(method.getDeclaringClass().newInstance(), arguments);
-
                         String result = String.valueOf(o);
-
                         exchange.getResponseSender().send(result);
 
                     } catch (Exception e) {
