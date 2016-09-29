@@ -1,5 +1,6 @@
 package framework;
 
+import framework.api.HeaderParam;
 import framework.api.MyEnum;
 import framework.api.Path;
 import framework.api.QueryParam;
@@ -40,8 +41,8 @@ public class Main {
                 .setHandler((HttpServerExchange exchange) -> {
                     exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "text/plain");
 
-                    try {
 
+                    try {
                         Consumer println = System.out::println;
 
                         // For this to work, first do gradle build of application,
@@ -85,9 +86,21 @@ public class Main {
                         Stream<Parameter> paramsStream = Stream.of(method.getParameters());
 
                         Object[] arguments = paramsStream.map(p -> {
-                            QueryParam annotation = p.getAnnotation(QueryParam.class);
-                            String paramName = annotation.value();
-                            String paramValue = exchange.getQueryParameters().get(paramName).getFirst();
+
+                            String paramName="", paramValue="";
+
+                            if (p.getAnnotations()[0].annotationType().getName().equals(QueryParam.class.getName())) {
+                                // this takes parameters from URL
+                                QueryParam annotation = p.getAnnotation(QueryParam.class);
+                                paramName = annotation.value();
+                                paramValue = exchange.getQueryParameters().get(paramName).getFirst();
+                            } else  {
+                                //this takes others --> headers, cookies etc.
+                                HeaderParam annotation2 = p.getAnnotation(HeaderParam.class);
+                                paramName = annotation2.value();
+                                paramValue = exchange.getRequestHeaders().get(paramName).getFirst();
+                            }
+
 
                             Class<?> paramType = p.getType();
 

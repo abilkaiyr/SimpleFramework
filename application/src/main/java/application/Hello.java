@@ -1,5 +1,6 @@
 package application;
 
+import framework.api.HeaderParam;
 import framework.api.MyEnum;
 import framework.api.QueryParam;
 import framework.api.Path;
@@ -27,12 +28,15 @@ public class Hello {
     }
 
 
-    private enum Alignment {LEFT, RIGHT};
-
     @Path("/passEnum")
-
     public String passEnum(@QueryParam("index") MyEnum a) {
         return "MyEnum." + a.name();
+    }
+
+
+    @Path("/passHeader")
+    public Integer passHeader(@HeaderParam("a") Integer a, @HeaderParam("b") Integer b) {
+        return a+b;
     }
 
 }
