@@ -1,7 +1,7 @@
 package framework;
 
 import framework.api.HeaderParam;
-import framework.api.MyEnum;
+
 import framework.api.Path;
 import framework.api.QueryParam;
 import io.undertow.Undertow;
@@ -89,6 +89,13 @@ public class Main {
 
                             String paramName="", paramValue="";
 
+                                //via stream
+//                            Arrays.stream(p.getAnnotations())
+//                                    .filter( f -> f.annotationType().getName().equals(QueryParam.class.getName()))
+//                                    .forEach(f -> { System.out.println(f + "  this is"); })
+//                            ;
+
+
                             if (p.getAnnotations()[0].annotationType().getName().equals(QueryParam.class.getName())) {
                                 // this takes parameters from URL
                                 QueryParam annotation = p.getAnnotation(QueryParam.class);
@@ -112,9 +119,8 @@ public class Main {
                                 return Float.valueOf(paramValue);
                             } else if (paramType.equals(Boolean.class)) {
                                 return Boolean.valueOf(paramValue);
-                            } else if (paramType.equals(MyEnum.class)) {
-                                MyEnum g = MyEnum.values()[Integer.valueOf(paramValue)];
-                                return g;
+                            } else if (paramType.isEnum()) {
+                                return Enum.valueOf((Class)paramType, paramValue);
                             } else {
                                 System.out.println("TYPE HERE --> " + paramType);
                                 return paramValue;

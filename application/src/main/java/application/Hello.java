@@ -29,8 +29,8 @@ public class Hello {
 
 
     @Path("/passEnum")
-    public String passEnum(@QueryParam("index") MyEnum a) {
-        return "MyEnum." + a.name();
+    public String passEnum(@QueryParam("a") Animal a) {
+        return "Animal -> " + a.name();
     }
 
 
